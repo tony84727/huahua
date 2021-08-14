@@ -1,6 +1,6 @@
 from db import new_engine
 from huahua.server import DatabaseServerList
-from huahua.command import AddServerCommand, Commander
+from huahua.command import AddServerCommand, Commander, ListServerCommand
 from eco.command import PingEcoCommand
 import discord
 import os
@@ -23,6 +23,8 @@ class MyClient(discord.Client):
         self.commander.add_command(
             'ping', PingEcoCommand(must_env('ECO_SERVER')))
         self.commander.add_command('addserver', AddServerCommand(server_list))
+        self.commander.add_command(
+            'listserver', ListServerCommand(server_list))
 
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))

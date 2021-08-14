@@ -1,3 +1,4 @@
+from typing import List
 import sqlalchemy
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm.session import Session
@@ -12,6 +13,9 @@ class ServerList:
         pass
 
     async def add(self, server: Server):
+        pass
+
+    async def all(self) -> List[Server]:
         pass
 
 
@@ -45,3 +49,7 @@ class DatabaseServerList(ServerList):
         except sqlalchemy.exc.IntegrityError as err:
             # assume this is a duplicated error because currently the only constraint is the UNIQUE index of the alias column
             raise AliasConflictException() from err
+
+    async def all(self) -> List[Server]:
+        with Session(self.engine) as session:
+            return session.query(Server).limit(100).all()

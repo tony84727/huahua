@@ -108,3 +108,16 @@ class AddServerCommand(Command):
         embed.add_field(name='別名', value=alias)
         embed.add_field(name='說明', value=description)
         return await message.reply(embed=embed)
+
+
+class ListServerCommand(Command):
+    """Command for listing registered servers"""
+
+    def __init__(self, server_list: ServerList) -> None:
+        super().__init__()
+        self.server_list = server_list
+
+    async def execute(self, message: Message):
+        list = "\n".join(
+            [f"{s.alias!r}\t{s.address!r}\t{s.description!r}" for s in await self.server_list.all()])
+        return await message.reply(list)

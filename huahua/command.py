@@ -1,12 +1,12 @@
 import re
-from typing import Dict, Mapping, Optional
+from typing import Dict, List, Mapping, Optional
 from discord import Message
 import discord
 from discord.colour import Colour
 from discord.embeds import Embed
-from sqlalchemy.sql.expression import desc
 from huahua.server import AliasConflictException, ServerList
 from model import Server
+from prettytable import PrettyTable
 
 
 class Command:
@@ -110,6 +110,14 @@ class AddServerCommand(Command):
         return await message.reply(embed=embed)
 
 
+def format_server_list(servers: List[Server]) -> str:
+    table = PrettyTable()
+    table.field_names = ['Alias', 'Address', 'Description']
+    table.add_rows([[s.alias, s.address, s.description] for s in servers])
+    newline = '\n'
+    return f"```{newline}{table.get_string()}{newline}```"
+
+
 class ListServerCommand(Command):
     """Command for listing registered servers"""
 
@@ -118,6 +126,4 @@ class ListServerCommand(Command):
         self.server_list = server_list
 
     async def execute(self, message: Message):
-        list = "\n".join(
-            [f"{s.alias!r}\t{s.address!r}\t{s.description!r}" for s in await self.server_list.all()])
-        return await message.reply(list)
+        return await message.reply(format_server_list(await self.server_list.all()))

@@ -32,13 +32,7 @@ class DatabaseServerList(ServerList):
 
     async def resolve(self, alias: str) -> Server:
         with Session(self.engine) as session:
-            server = session.execute(
-                select(Server).filter_by(alias=alias),
-            ).scalar_one()
-            if server:
-                return server
-            else:
-                return session.execute(select(Server).filter_by(alias=alias)).scalar_one()
+            return session.query(Server).filter_by(alias=alias).first()
 
     async def add(self, server: Server):
         try:

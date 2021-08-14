@@ -21,7 +21,7 @@ class MyClient(discord.Client):
         server_list = DatabaseServerList(engine)
         self.commander = Commander()
         self.commander.add_command(
-            'ping', PingEcoCommand(must_env('ECO_SERVER')))
+            'ping', PingEcoCommand(server_list))
         self.commander.add_command('addserver', AddServerCommand(server_list))
         self.commander.add_command(
             'listserver', ListServerCommand(server_list))

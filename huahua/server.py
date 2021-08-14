@@ -1,3 +1,4 @@
+import sqlalchemy
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import select
@@ -12,6 +13,11 @@ class ServerList:
 
     async def add(self, server: Server):
         pass
+
+
+class AliasConflictException(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__('Alias duplicated')
 
 
 class DatabaseServerList(ServerList):
@@ -31,7 +37,11 @@ class DatabaseServerList(ServerList):
                 return session.execute(select(Server).filter_by(alias=alias)).scalar_one()
 
     async def add(self, server: Server):
-        with Session(self.engine) as session:
-            session.add(server)
-            session.flush()
-            return
+        try:
+            with Session(self.engine) as session:
+                session.add(server)
+                session.commit()
+                return
+        except sqlalchemy.exc.IntegrityError as err:
+            # assume this is a duplicated error because currently the only constraint is the UNIQUE index of the alias column
+            raise AliasConflictException() from err

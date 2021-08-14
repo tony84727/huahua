@@ -1,4 +1,6 @@
-from huahua.command import Commander
+from db import new_engine
+from huahua.server import DatabaseServerList
+from huahua.command import AddServerCommand, Commander
 from eco.command import PingEcoCommand
 import discord
 import os
@@ -15,15 +17,18 @@ def must_env(name: str) -> str:
 class MyClient(discord.Client):
     def __init__(self, *, loop=None, **options):
         super().__init__(loop=loop, **options)
+        engine = new_engine()
+        server_list = DatabaseServerList(engine)
         self.commander = Commander()
         self.commander.add_command(
             'ping', PingEcoCommand(must_env('ECO_SERVER')))
+        self.commander.add_command('addserver', AddServerCommand(server_list))
 
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
 
     async def on_message(self, message: discord.Message):
-        if message.author.bot or not message.content.startswith('!ping'):
+        if message.author.bot:
             return
         await self.commander.execute(message)
 

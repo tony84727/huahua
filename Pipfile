@@ -6,10 +6,14 @@ name = "pypi"
 [packages]
 "discord.py" = "*"
 requests = "*"
+sqlalchemy = "*"
+pymysql = "*"
+prettytable = "*"
 
 [dev-packages]
 autopep8 = "*"
 ipython = "*"
+alembic = "*"
 
 [requires]
 python_version = "3.8"

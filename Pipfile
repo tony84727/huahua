@@ -12,6 +12,7 @@ pymysql = "*"
 [dev-packages]
 autopep8 = "*"
 ipython = "*"
+alembic = "*"
 
 [requires]
 python_version = "3.8"

@@ -1,7 +1,9 @@
+from sqlalchemy.sql.sqltypes import Numeric
 from huahua.command import Command, Commander
 from eco.formatting import discord_friendly_message
 import discord
 import os
+import time
 
 from discord.colour import Colour
 import eco
@@ -15,7 +17,7 @@ def must_env(name: str) -> str:
     return v
 
 
-def server_status_message(result: eco.ping.PingResult):
+def server_status_message(result: eco.ping.PingResult, spent=None):
     """format eco server ping result into a discord embed message"""
     embed = discord.Embed()
     embed.colour = Colour.green()
@@ -27,6 +29,8 @@ def server_status_message(result: eco.ping.PingResult):
     embed.add_field(name="在線玩家 {}/{}".format(len(result.players()),
                     result.total_players()), value="\n".join(result.players()))
     embed.add_field(name="版本", value=result.version())
+    if spent != None:
+        embed.set_footer(text=f"耗時 {spent} 毫秒")
     return embed
 
 
@@ -38,8 +42,10 @@ class PingEcoCommand(Command):
         self.pinger = eco.ping.Pinger(server_address)
 
     async def execute(self, message: discord.Message):
+        start = time.time()
         result = self.pinger.fetch()
-        await message.reply(embed=server_status_message(result))
+        spent = round((time.time() - start) * 1000, 2)
+        await message.reply(embed=server_status_message(result, spent))
 
 
 class MyClient(discord.Client):

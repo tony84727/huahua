@@ -1,4 +1,4 @@
-import requests
+import aiohttp
 
 
 class PingResult:
@@ -25,6 +25,7 @@ class Pinger:
     def __init__(self, address):
         self.address = address
 
-    def fetch(self) -> PingResult:
-        r = requests.get('http://{}/info'.format(self.address))
-        return PingResult(r.json())
+    async def fetch(self) -> PingResult:
+        async with aiohttp.ClientSession() as session:
+            async with session.get('http://{}/info'.format(self.address)) as r:
+                return PingResult(await r.json())

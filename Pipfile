@@ -5,10 +5,10 @@ name = "pypi"
 
 [packages]
 "discord.py" = "*"
-requests = "*"
 sqlalchemy = "*"
 pymysql = "*"
 prettytable = "*"
+aiohttp = "*"
 
 [dev-packages]
 autopep8 = "*"

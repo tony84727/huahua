@@ -1,6 +1,8 @@
 from typing import Dict, List
+from PIL import Image, ImageDraw
 import aiohttp
 import re
+import random
 
 
 class Chunk:
@@ -14,6 +16,9 @@ class Plot:
         self.name = name
         self.owner = owner
         self.chunks = chunks
+
+    def __repr__(self) -> str:
+        return f"name: {self.name}, owner: {self.owner}, size: {self.size}"
 
     @property
     def size(self):
@@ -64,3 +69,39 @@ class MapInfoFetcher:
         async with aiohttp.ClientSession() as session:
             async with session.get(f'http://{self.address}/api/v1/map/map.json') as r:
                 return parse_map_info(await r.json())
+
+
+class TerrainFetcher:
+    def __init__(self, address: str) -> None:
+        self.address = address
+
+    async def fetch(self):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f'http://{self.address}/Layers/TerrainLatest.gif') as r:
+                return r.content
+
+
+class PlotMapComposer:
+    def __init__(self, terrian, plots: List[Plot]):
+        self.terrian = terrian
+        self.plots = plots
+
+    def compose(self) -> Image:
+        with open('./TerrainLatest.gif', 'rb') as imfile:
+            with Image.open(imfile).convert('RGBA') as im:
+                with Image.new('RGBA', im.size) as overlay:
+                    draw = ImageDraw.Draw(overlay)
+                    for p in self.plots:
+                        color = (
+                            random.randrange(0, 256),
+                            random.randrange(0, 256),
+                            random.randrange(0, 256),
+                            200,
+                        )
+                        for c in p.chunks:
+                            draw.rectangle(
+                                (c.x - 10, c.y - 10, c.x + 10, c.y + 10),
+                                fill=color,
+                            )
+                    out = Image.alpha_composite(im, overlay)
+                    return out

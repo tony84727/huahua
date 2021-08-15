@@ -1,4 +1,4 @@
-from eco.terrian_plot import PlotNameOwnerParser
+from eco.terrain_plot import PlotNameOwnerParser
 import unittest
 
 

@@ -9,6 +9,7 @@ sqlalchemy = "*"
 pymysql = "*"
 prettytable = "*"
 aiohttp = "*"
+pillow = "*"
 
 [dev-packages]
 autopep8 = "*"

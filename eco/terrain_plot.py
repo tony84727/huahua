@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw
 import aiohttp
 import re
 import random
+import io
 
 
 class Chunk:
@@ -75,33 +76,34 @@ class TerrainFetcher:
     def __init__(self, address: str) -> None:
         self.address = address
 
-    async def fetch(self):
+    async def fetch(self) -> bytes:
         async with aiohttp.ClientSession() as session:
             async with session.get(f'http://{self.address}/Layers/TerrainLatest.gif') as r:
-                return r.content
+                return await r.content.read()
 
 
 class PlotMapComposer:
-    def __init__(self, terrian, plots: List[Plot]):
-        self.terrian = terrian
+    """Draw colorful overlays on the terrain to mark plots"""
+
+    def __init__(self, terrain, plots: List[Plot]):
+        self.terrain = terrain
         self.plots = plots
 
     def compose(self) -> Image:
-        with open('./TerrainLatest.gif', 'rb') as imfile:
-            with Image.open(imfile).convert('RGBA') as im:
-                with Image.new('RGBA', im.size) as overlay:
-                    draw = ImageDraw.Draw(overlay)
-                    for p in self.plots:
-                        color = (
-                            random.randrange(0, 256),
-                            random.randrange(0, 256),
-                            random.randrange(0, 256),
-                            200,
+        with Image.open(io.BytesIO(self.terrain)).convert('RGBA') as im:
+            with Image.new('RGBA', im.size) as overlay:
+                draw = ImageDraw.Draw(overlay)
+                for p in self.plots:
+                    color = (
+                        random.randrange(0, 256),
+                        random.randrange(0, 256),
+                        random.randrange(0, 256),
+                        200,
+                    )
+                    for c in p.chunks:
+                        draw.rectangle(
+                            (c.x - 10, c.y - 10, c.x + 10, c.y + 10),
+                            fill=color,
                         )
-                        for c in p.chunks:
-                            draw.rectangle(
-                                (c.x - 10, c.y - 10, c.x + 10, c.y + 10),
-                                fill=color,
-                            )
-                    out = Image.alpha_composite(im, overlay)
-                    return out
+                out = Image.alpha_composite(im, overlay)
+                return out

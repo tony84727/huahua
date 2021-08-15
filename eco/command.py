@@ -46,6 +46,6 @@ class PingEcoCommand(Command):
             embed.description = f"找不到 {alias} 伺服器"
             await message.reply(embed=embed)
         pinger = Pinger(server.address)
-        result = pinger.fetch()
+        result = await pinger.fetch()
         spent = round((time.time() - start) * 1000, 2)
         await message.reply(embed=server_status_message(result, spent))

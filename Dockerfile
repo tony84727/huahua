@@ -3,5 +3,7 @@ RUN pip install pipenv --no-cache-dir
 COPY Pipfile ./
 COPY Pipfile.lock ./
 COPY . .
-RUN pipenv install --system --deploy && rm Pipfile Pipfile.lock && pip uninstall -y pipenv
+RUN pipenv install --system --deploy
+RUN pip install alembic
+RUN rm Pipfile Pipfile.lock && pip uninstall -y pipenv
 CMD [ "python", "./bot.py" ]

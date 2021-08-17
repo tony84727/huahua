@@ -1,4 +1,5 @@
-from db import new_engine
+from sqlalchemy.engine import create_engine
+from db import get_dsn
 from huahua.server import DatabaseServerList
 from huahua.command import AddServerCommand, Commander, ListServerCommand
 from eco.command import PingEcoCommand
@@ -17,7 +18,7 @@ def must_env(name: str) -> str:
 class MyClient(discord.Client):
     def __init__(self, *, loop=None, **options):
         super().__init__(loop=loop, **options)
-        engine = new_engine()
+        engine = create_engine(get_dsn())
         server_list = DatabaseServerList(engine)
         self.commander = Commander()
         self.commander.add_command(

@@ -9,6 +9,8 @@ sqlalchemy = "*"
 pymysql = "*"
 prettytable = "*"
 aiohttp = "*"
+pyopengl = "*"
+pyopengl-accelerate = "*"
 
 [dev-packages]
 autopep8 = "*"

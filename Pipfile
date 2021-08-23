@@ -14,6 +14,7 @@ aiohttp = "*"
 autopep8 = "*"
 ipython = "*"
 alembic = "*"
+sniffer = "*"
 
 [requires]
 python_version = "3.8"

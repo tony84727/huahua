@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "50e924511994798f6ad97857787c43359aafba8e9a3a2a657a5409f94b8d3b81"
+            "sha256": "2d26d194347fa4a9ce758df87620882a31abca21142de0e3be6a475c0190f46e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -436,6 +436,14 @@
             "markers": "python_version >= '3.6'",
             "version": "==0.18.0"
         },
+        "macfsevents": {
+            "hashes": [
+                "sha256:1324b66b356051de662ba87d84f73ada062acd42b047ed1246e60a449f833e10"
+            ],
+            "index": "pypi",
+            "markers": "sys_platform == 'darwin'",
+            "version": "==0.8.1"
+        },
         "mako": {
             "hashes": [
                 "sha256:169fa52af22a91900d852e937400e79f535496191c63712e3b9fda5a9bed6fc3",
@@ -574,6 +582,13 @@
             "markers": "python_version >= '3.5'",
             "version": "==2.10.0"
         },
+        "pyinotify": {
+            "hashes": [
+                "sha256:9c998a5d7606ca835065cdabc013ae6c66eb9ea76a00a1e3bc6e0cfe2b4f71f4"
+            ],
+            "markers": "sys_platform == 'linux'",
+            "version": "==0.9.6"
+        },
         "python-dateutil": {
             "hashes": [
                 "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86",
@@ -598,6 +613,10 @@
                 "sha256:f42a6bb16fbfc5e2c66d553e7ad46524ea833872f75ee5d827c15115fafc94e2"
             ],
             "version": "==0.1.10"
+        },
+        "pywin32": {
+            "sys_platform": "== 'win32'",
+            "version": "*"
         },
         "six": {
             "hashes": [

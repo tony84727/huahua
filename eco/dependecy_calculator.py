@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 
 def rule(input, output):
@@ -45,16 +45,31 @@ class RecipeAggregator:
         return list(self.recipes.values())
 
 
-class DependencyResolver:
+class RuleLookup:
+    """Lookup dependency """
+
+    def lookup(self, name: str) -> Optional[Rule]:
+        pass
+
+
+class StaticRuleLookup(RuleLookup):
     def __init__(self, rules: List[Rule]) -> None:
         self.rules = index_rules(rules)
 
+    def lookup(self, name: str) -> Optional[Rule]:
+        return self.rules.get(name)
+
+
+class DependencyResolver:
+    def __init__(self, rule_lookup: RuleLookup) -> None:
+        self.rule_lookup = rule_lookup
+
     def resolve_all(self, name: str) -> List[Recipe]:
         recipes = RecipeAggregator()
-        work_queue = self.rules[name].recipes
+        work_queue = self.rule_lookup.lookup(name).recipes
         while len(work_queue) > 0:
             recipe = work_queue.pop()
-            crafting_rule = self.rules.get(recipe.name)
+            crafting_rule = self.rule_lookup.lookup(recipe.name)
             if crafting_rule is None:
                 recipes.add(recipe)
             else:

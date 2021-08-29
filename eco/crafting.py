@@ -2,11 +2,6 @@ import re
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
-
-def rule(input, output):
-    return (input, output)
-
-
 @dataclass(eq=True, frozen=True)
 class Recipe:
     name: str
@@ -107,7 +102,7 @@ class MakefileRuleParser:
 class MakeFileStyleRuleLookup(StaticRuleLookup):
     def __init__(self, rules: str) -> None:
         parser = MakefileRuleParser()
-        super(parser.parse(rules))
+        super().__init__(parser.parse(rules))
 
 
 class RecipeResolver:

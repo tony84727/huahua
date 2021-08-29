@@ -1,4 +1,4 @@
-from eco.dependecy_calculator import DependencyResolver, Recipe, Rule, StaticRuleLookup
+from eco.dependecy_calculator import DependencyResolver, MakefileRuleParser, Recipe, Rule, StaticRuleLookup
 import unittest
 
 
@@ -39,3 +39,19 @@ class TestDependencyCalculator(unittest.TestCase):
                 Recipe('limestone', 4)
             ]),
             set(recipes))
+
+
+class TestMakefileRuleParser(unittest.TestCase):
+    def test_parse(self):
+        parser = MakefileRuleParser()
+        rules = parser.parse('''
+        Furnace: Cobblestone@8
+        HwenLog: WoodTag
+        ''')
+        self.assertEqual(
+            [
+                Rule('Furnace', [Recipe('Cobblestone', 8)]),
+                Rule('HwenLog', [Recipe('WoodTag', 1)]),
+            ],
+            rules,
+        )

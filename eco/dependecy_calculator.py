@@ -1,5 +1,6 @@
+import re
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 
 def rule(input, output):
@@ -58,6 +59,55 @@ class StaticRuleLookup(RuleLookup):
 
     def lookup(self, name: str) -> Optional[Rule]:
         return self.rules.get(name)
+
+
+class MakefileRuleSyntaxError(RuntimeError):
+    def __init__(self, line_number: int, line: str) -> None:
+        super().__init__(
+            f"Make file syntax error at line {line_number}: {line}")
+
+
+class MakefileRuleParser:
+    def __init__(self) -> None:
+        self.dependency_pattern = re.compile(r"([^\s@]+)(@([0-9]+))?")
+
+    def parse(self, input: str) -> List[Rule]:
+        rules = list()
+        for line_number, line in enumerate(input.split("\n")):
+            rule = self.parse_line(line)
+            if rule is not None:
+                rules.append(rule)
+        return rules
+
+    def parse_line(self, line: str) -> Optional[Rule]:
+        target_dependencies = self.split_target_dependencies(line)
+        if target_dependencies is None:
+            return None
+        (target, dependencies) = target_dependencies
+        return Rule(target, self.parse_dependencies(dependencies))
+
+    def split_target_dependencies(self, line: str) -> Optional[Tuple[str, str]]:
+        segments = line.split(":")
+        if len(segments) != 2:
+            return None
+        return (segments[0].strip(), segments[1].strip())
+
+    def parse_dependencies(self, dependencies: str):
+        recipes = list()
+        dependencies = dependencies.split(' ')
+        for deps in dependencies:
+            matches = self.dependency_pattern.search(deps)
+            count = 1
+            if matches[3] is not None:
+                count = float(matches[3])
+            recipes.append(Recipe(matches[1], count))
+        return recipes
+
+
+class MakeFileStyleRuleLookup(StaticRuleLookup):
+    def __init__(self, rules: str) -> None:
+        parser = MakefileRuleParser()
+        super(parser.parse(rules))
 
 
 class DependencyResolver:

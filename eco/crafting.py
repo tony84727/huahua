@@ -110,7 +110,7 @@ class MakeFileStyleRuleLookup(StaticRuleLookup):
         super(parser.parse(rules))
 
 
-class DependencyResolver:
+class RecipeResolver:
     def __init__(self, rule_lookup: RuleLookup) -> None:
         self.rule_lookup = rule_lookup
 

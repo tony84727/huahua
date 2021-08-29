@@ -73,7 +73,7 @@ class MakefileRuleParser:
 
     def parse(self, input: str) -> List[Rule]:
         rules = list()
-        for line_number, line in enumerate(input.split("\n")):
+        for line in input.split("\n"):
             rule = self.parse_line(line)
             if rule is not None:
                 rules.append(rule)

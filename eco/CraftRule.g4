@@ -1,9 +1,14 @@
 grammar CraftRule;
 
-craftingRule: recipe | recipeCount;
-recipe: NAME | quoteRecipe;
-quoteRecipe: '"' NAME_WITH_SPACE '"' | '\'' NAME_WITH_SPACE '\'';
-recipeCount: recipe 'x' COUNT;
+craftingRule: target '=' recipe ('+' recipe)*;
+target: identifier;
+recipe: identifierAndCount | identifier;
+identifierAndCount: identifier '*' number;
+identifier: quotedIdentifier | NAME;
+number: DIGITS;
+quotedIdentifier: STRING;
+
 DIGITS: [0-9]+;
-COUNT: DIGITS | DIGITS '.' DIGITS;
-WS: [\t\r\n]+ -> skip;
+NAME: ~[\r\t\n=+* ]+;
+STRING: '\''.*?'\'';
+WS: [\r\t\n]+ -> skip;

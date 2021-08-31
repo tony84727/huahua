@@ -1,11 +1,9 @@
 # Generated from CraftRule.g4 by ANTLR 4.9.2
 from antlr4 import *
-
 if __name__ is not None and "." in __name__:
     from .CraftRuleParser import CraftRuleParser
 else:
     from CraftRuleParser import CraftRuleParser
-
 
 # This class defines a complete listener for a parse tree produced by CraftRuleParser.
 class CraftRuleListener(ParseTreeListener):
@@ -18,6 +16,14 @@ class CraftRuleListener(ParseTreeListener):
     def exitCraftingRule(self, ctx: CraftRuleParser.CraftingRuleContext):
         pass
 
+    # Enter a parse tree produced by CraftRuleParser#target.
+    def enterTarget(self, ctx: CraftRuleParser.TargetContext):
+        pass
+
+    # Exit a parse tree produced by CraftRuleParser#target.
+    def exitTarget(self, ctx: CraftRuleParser.TargetContext):
+        pass
+
     # Enter a parse tree produced by CraftRuleParser#recipe.
     def enterRecipe(self, ctx: CraftRuleParser.RecipeContext):
         pass
@@ -26,20 +32,36 @@ class CraftRuleListener(ParseTreeListener):
     def exitRecipe(self, ctx: CraftRuleParser.RecipeContext):
         pass
 
-    # Enter a parse tree produced by CraftRuleParser#quoteRecipe.
-    def enterQuoteRecipe(self, ctx: CraftRuleParser.QuoteRecipeContext):
+    # Enter a parse tree produced by CraftRuleParser#identifierAndCount.
+    def enterIdentifierAndCount(self, ctx: CraftRuleParser.IdentifierAndCountContext):
         pass
 
-    # Exit a parse tree produced by CraftRuleParser#quoteRecipe.
-    def exitQuoteRecipe(self, ctx: CraftRuleParser.QuoteRecipeContext):
+    # Exit a parse tree produced by CraftRuleParser#identifierAndCount.
+    def exitIdentifierAndCount(self, ctx: CraftRuleParser.IdentifierAndCountContext):
         pass
 
-    # Enter a parse tree produced by CraftRuleParser#recipeCount.
-    def enterRecipeCount(self, ctx: CraftRuleParser.RecipeCountContext):
+    # Enter a parse tree produced by CraftRuleParser#identifier.
+    def enterIdentifier(self, ctx: CraftRuleParser.IdentifierContext):
         pass
 
-    # Exit a parse tree produced by CraftRuleParser#recipeCount.
-    def exitRecipeCount(self, ctx: CraftRuleParser.RecipeCountContext):
+    # Exit a parse tree produced by CraftRuleParser#identifier.
+    def exitIdentifier(self, ctx: CraftRuleParser.IdentifierContext):
+        pass
+
+    # Enter a parse tree produced by CraftRuleParser#number.
+    def enterNumber(self, ctx: CraftRuleParser.NumberContext):
+        pass
+
+    # Exit a parse tree produced by CraftRuleParser#number.
+    def exitNumber(self, ctx: CraftRuleParser.NumberContext):
+        pass
+
+    # Enter a parse tree produced by CraftRuleParser#quotedIdentifier.
+    def enterQuotedIdentifier(self, ctx: CraftRuleParser.QuotedIdentifierContext):
+        pass
+
+    # Exit a parse tree produced by CraftRuleParser#quotedIdentifier.
+    def exitQuotedIdentifier(self, ctx: CraftRuleParser.QuotedIdentifierContext):
         pass
 
 

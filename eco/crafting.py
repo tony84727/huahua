@@ -2,6 +2,7 @@ import re
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
+
 @dataclass(eq=True, frozen=True)
 class Recipe:
     name: str

@@ -1,6 +1,6 @@
 import unittest
 
-from eco.crafting import RecipeResolver, MakefileRuleParser, Recipe, Rule, StaticRuleLookup
+from eco.crafting import RecipeResolver, Recipe, Rule, StaticRuleLookup, parse_craft_rule
 
 
 class TestRecipeResolver(unittest.TestCase):
@@ -33,20 +33,15 @@ class TestRecipeResolver(unittest.TestCase):
         resolver = RecipeResolver(rule_lookup)
         recipes = resolver.resolve_all('glass')
         self.assertEqual(
-            set([
-                Recipe('mining labor', 1000),
-                Recipe('glassworking labor', 0.5),
-                Recipe('sand', 4),
-                Recipe('limestone', 4)
-            ]),
+            {Recipe('mining labor', 1000), Recipe('glassworking labor', 0.5), Recipe('sand', 4),
+             Recipe('limestone', 4)},
             set(recipes))
 
 
-class TestMakefileRuleParser(unittest.TestCase):
+class TestParseCraftRule(unittest.TestCase):
     def test_parse(self):
         with open('craft_rule_sample', 'r') as sample_file:
-            parser = MakefileRuleParser()
-            rules = parser.parse(sample_file.read())
+            rules = parse_craft_rule(sample_file.read())
             self.assertEqual(
                 [
                     Rule('Blast Furnace', [Recipe('Engineering Labor', 100), Recipe('Iron Bar', 60)]),

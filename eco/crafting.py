@@ -97,23 +97,21 @@ class CraftRuleParsingListener(CraftRuleListener):
         self.recipes = list()
 
 
-class MakefileRuleParser:
-    def parse(self, specification: str) -> List[Rule]:
-        stream = antlr4.InputStream(specification)
-        lexer = CraftRuleLexer(stream)
-        token_stream = antlr4.CommonTokenStream(lexer)
-        parser = CraftRuleParser(token_stream)
-        walker = antlr4.ParseTreeWalker()
-        listener = CraftRuleParsingListener()
-        tree = parser.specification()
-        walker.walk(listener, tree)
-        return listener.rules
+def parse_craft_rule(specification: str) -> List[Rule]:
+    stream = antlr4.InputStream(specification)
+    lexer = CraftRuleLexer(stream)
+    token_stream = antlr4.CommonTokenStream(lexer)
+    parser = CraftRuleParser(token_stream)
+    walker = antlr4.ParseTreeWalker()
+    listener = CraftRuleParsingListener()
+    tree = parser.specification()
+    walker.walk(listener, tree)
+    return listener.rules
 
 
-class MakeFileStyleRuleLookup(StaticRuleLookup):
+class CraftRuleLookup(StaticRuleLookup):
     def __init__(self, rules: str) -> None:
-        parser = MakefileRuleParser()
-        super().__init__(parser.parse(rules))
+        super().__init__(parse_craft_rule(rules))
 
 
 class RecipeResolver:

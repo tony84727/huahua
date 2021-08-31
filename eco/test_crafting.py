@@ -1,5 +1,6 @@
-from eco.crafting import RecipeResolver, MakefileRuleParser, Recipe, Rule, StaticRuleLookup
 import unittest
+
+from eco.crafting import RecipeResolver, MakefileRuleParser, Recipe, Rule, StaticRuleLookup
 
 
 class TestRecipeResolver(unittest.TestCase):
@@ -43,15 +44,14 @@ class TestRecipeResolver(unittest.TestCase):
 
 class TestMakefileRuleParser(unittest.TestCase):
     def test_parse(self):
-        parser = MakefileRuleParser()
-        rules = parser.parse('''
-        Furnace: Cobblestone@8
-        HwenLog: WoodTag
-        ''')
-        self.assertEqual(
-            [
-                Rule('Furnace', [Recipe('Cobblestone', 8)]),
-                Rule('HwenLog', [Recipe('WoodTag', 1)]),
-            ],
-            rules,
-        )
+        with open('craft_rule_sample', 'r') as sample_file:
+            parser = MakefileRuleParser()
+            rules = parser.parse(sample_file.read())
+            self.assertEqual(
+                [
+                    Rule('Blast Furnace', [Recipe('Engineering Labor', 100), Recipe('Iron Bar', 60)]),
+                    Rule('Empty Pot', [Recipe('Glass', 1), Recipe('Glassworking Labor', 100)]),
+                    Rule('高爐', [Recipe('基礎工程勞動力', 10.4), Recipe('鐵條', 60)])
+                ],
+                rules,
+            )

@@ -2,9 +2,10 @@ T__0=1
 T__1=2
 T__2=3
 DIGITS=4
-NAME=5
-STRING=6
-WS=7
+NEWLINE=5
+NAME=6
+STRING=7
+WS=8
 '='=1
 '+'=2
 '*'=3

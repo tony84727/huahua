@@ -1,6 +1,11 @@
-import re
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
+
+import antlr4
+
+from .CraftRuleLexer import CraftRuleLexer
+from .CraftRuleListener import CraftRuleListener
+from .CraftRuleParser import CraftRuleParser
 
 
 @dataclass(eq=True, frozen=True)
@@ -63,41 +68,46 @@ class MakefileRuleSyntaxError(RuntimeError):
             f"Make file syntax error at line {line_number}: {line}")
 
 
+class CraftRuleParsingListener(CraftRuleListener):
+    def __init__(self):
+        super().__init__()
+        self.rules = list()
+        self.recipes = list()
+
+    target: str
+    count: float
+    recipeName: str
+
+    def enterTarget(self, ctx: CraftRuleParser.TargetContext):
+        self.target = ctx.getText().strip('\'')
+
+    def enterRecipeName(self, ctx: CraftRuleParser.RecipeNameContext):
+        self.count = 1
+        self.recipeName = ctx.getText().strip('\'')
+
+    def enterNumber(self, ctx: CraftRuleParser.NumberContext):
+        self.count = float(ctx.getText())
+
+    def exitRecipe(self, ctx: CraftRuleParser.RecipeWithCountContext):
+        self.recipes.append(Recipe(self.recipeName, self.count))
+
+    def exitCraftingRule(self, ctx: CraftRuleParser.CraftingRuleContext):
+        if len(self.target) > 0 and len(self.recipes) > 0:
+            self.rules.append(Rule(self.target, self.recipes))
+        self.recipes = list()
+
+
 class MakefileRuleParser:
-    def __init__(self) -> None:
-        self.dependency_pattern = re.compile(r"([^\s@]+)(@([0-9]+))?")
-
-    def parse(self, input: str) -> List[Rule]:
-        rules = list()
-        for line in input.split("\n"):
-            rule = self.parse_line(line)
-            if rule is not None:
-                rules.append(rule)
-        return rules
-
-    def parse_line(self, line: str) -> Optional[Rule]:
-        target_dependencies = self.split_target_dependencies(line)
-        if target_dependencies is None:
-            return None
-        (target, dependencies) = target_dependencies
-        return Rule(target, self.parse_dependencies(dependencies))
-
-    def split_target_dependencies(self, line: str) -> Optional[Tuple[str, str]]:
-        segments = line.split(":")
-        if len(segments) != 2:
-            return None
-        return (segments[0].strip(), segments[1].strip())
-
-    def parse_dependencies(self, dependencies: str):
-        recipes = list()
-        dependencies = dependencies.split(' ')
-        for deps in dependencies:
-            matches = self.dependency_pattern.search(deps)
-            count = 1
-            if matches[3] is not None:
-                count = float(matches[3])
-            recipes.append(Recipe(matches[1], count))
-        return recipes
+    def parse(self, specification: str) -> List[Rule]:
+        stream = antlr4.InputStream(specification)
+        lexer = CraftRuleLexer(stream)
+        token_stream = antlr4.CommonTokenStream(lexer)
+        parser = CraftRuleParser(token_stream)
+        walker = antlr4.ParseTreeWalker()
+        listener = CraftRuleParsingListener()
+        tree = parser.specification()
+        walker.walk(listener, tree)
+        return listener.rules
 
 
 class MakeFileStyleRuleLookup(StaticRuleLookup):

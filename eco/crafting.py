@@ -111,7 +111,8 @@ def parse_craft_rule(specification: str) -> List[Rule]:
 
 class CraftRuleLookup(StaticRuleLookup):
     def __init__(self, rules: str) -> None:
-        super().__init__(parse_craft_rule(rules))
+        rules = parse_craft_rule(rules)
+        super().__init__(rules)
 
 
 class RecipeResolver:
@@ -120,7 +121,7 @@ class RecipeResolver:
 
     def resolve_all(self, name: str) -> List[Recipe]:
         recipes = RecipeAggregator()
-        work_queue = self.rule_lookup.lookup(name).recipes
+        work_queue = self.rule_lookup.lookup(name).recipes.copy()
         while len(work_queue) > 0:
             recipe = work_queue.pop()
             crafting_rule = self.rule_lookup.lookup(recipe.name)

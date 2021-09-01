@@ -1,0 +1,6 @@
+
+'Blast Furnace' = 'Engineering Labor' * 100 + 'Iron Bar'*60
+
+'Empty Pot' = Glass*1 + 'Glassworking Labor' * 100
+
+高爐=基礎工程勞動力*10.4+鐵條*60

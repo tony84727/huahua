@@ -9,14 +9,20 @@ sqlalchemy = "*"
 pymysql = "*"
 prettytable = "*"
 aiohttp = "*"
+antlr4-python3-runtime = "*"
 
 [dev-packages]
 autopep8 = "*"
 ipython = "*"
 alembic = "*"
+sniffer = "*"
+pywin32 = {version = "*", sys_platform = "== 'win32'"}
+pyinotify = {version = "*", sys_platform = "== 'linux'"}
+macfsevents = {version = "*", sys_platform = "== 'darwin'"}
 
 [requires]
 python_version = "3.8"
 
 [scripts]
 test = "python -m unittest"
+watch = "sniffer"

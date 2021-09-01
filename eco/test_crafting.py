@@ -40,7 +40,7 @@ class TestRecipeResolver(unittest.TestCase):
 
 class TestParseCraftRule(unittest.TestCase):
     def test_parse(self):
-        with open('craft_rule_sample', 'r') as sample_file:
+        with open('./testdata/craft_rule_sample', 'r') as sample_file:
             rules = parse_craft_rule(sample_file.read())
             self.assertEqual(
                 [
